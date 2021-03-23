@@ -25,7 +25,7 @@
     <!--声明mybatis的扫描器，扫描dao对象-->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="SqlSessionFactoryBeanName" value="sqlSessionFactory"/>
-        <property name="basePackage" value="com.bjpowernode.crm.settings.dao"/>
+        <property name="basePackage" value="com.bjpowernode.crm.settings.dao,com.bjpowernode.crm.workbench.dao"/>
     </bean>
 
     <!--声明service的注解@Service所在的包名位置-->

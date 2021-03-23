@@ -12,6 +12,7 @@
     <typeAliases>
         <!--<typeAlias type="com.bjpowernode.mybatis.domain.Student" alias="student"/>-->
         <package name="com.bjpowernode.crm.settings.domain"/>    <!--包下所有类的类名就是别名-->
+        <package name="com.bjpowernode.crm.workbench.domain"/>
     </typeAliases>
 
     <!--sql mapper(sql映射文件)的位置-->
@@ -24,5 +25,6 @@
                 2.mapper文件和dao接口必须在同一目录
         -->
         <package name="com.bjpowernode.crm.settings.dao"/>
+        <package name="com.bjpowernode.crm.workbench.dao"/>
     </mappers>
 </configuration>

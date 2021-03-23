@@ -20,8 +20,16 @@ request.getContextPath() + "/";
 <script type="text/javascript">
 
 	$(function(){
-		
-		
+		//为创建按钮绑定事件，打开添加操作的模态窗口
+		$("#addBtn").click(function () {
+			/*
+			* 操作模态窗口的方式：
+			* 	需要操作的模态窗口的jquery对象，调用modal方法，为该方法传递参数 show:打开模态窗口 hide:关闭模态窗口
+			*
+			 */
+			$("#createActivityModal").modal("show");
+
+		})
 		
 	});
 	
@@ -208,7 +216,23 @@ request.getContextPath() + "/";
 			</div>
 			<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 5px;">
 				<div class="btn-group" style="position: relative; top: 18%;">
-				  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createActivityModal"><span class="glyphicon glyphicon-plus"></span> 创建</button>
+					<%--
+						点击创建按钮，观察两个属性和属性值
+
+						data-toggle="modal":
+							表示触发该按钮，将要打开一个模态窗口
+
+						data-target="#createActivityModal":
+							表示要打开哪个模态窗口，通过#id的形式找到该窗口
+
+						现在我们是以属性和属性值的方式写在了botton元素中，用来打开模态窗口
+						但是这样做是有问题的：
+							问题在于没有办法对按钮的功能进行扩充
+
+						所以未来的实际项目开发，对于触发模态窗口的操作，一定不要写死在元素当中，
+						应当由我们自己写js代码来操作
+					--%>
+				  <button type="button" class="btn btn-primary" id="addBtn"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editActivityModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
 				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
@@ -228,14 +252,14 @@ request.getContextPath() + "/";
 					<tbody>
 						<tr class="active">
 							<td><input type="checkbox" /></td>
-							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.html';">发传单</a></td>
+							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='workbench/activity/detail.jsp';">发传单</a></td>
                             <td>zhangsan</td>
 							<td>2020-10-10</td>
 							<td>2020-10-20</td>
 						</tr>
                         <tr class="active">
                             <td><input type="checkbox" /></td>
-                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.html';">发传单</a></td>
+                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='workbench/activity/detail.jsp';">发传单</a></td>
                             <td>zhangsan</td>
                             <td>2020-10-10</td>
                             <td>2020-10-20</td>

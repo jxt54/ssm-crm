@@ -27,6 +27,10 @@ request.getContextPath() + "/";
         })
 
         function load() {
+            //login.jsp始终在顶层窗口中打开
+            if(window.top!=window){
+                window.top.location=window.location;
+            }
             //页面加载完毕后，将用户文本框中的内容清空
             $("#loginAct").val("");
             //页面加载完毕后，让用户的文本框自动获得焦点
