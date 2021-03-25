@@ -9,6 +9,8 @@ import com.bjpowernode.crm.utils.DateTimeUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -41,5 +43,10 @@ public class UserServiceImpl implements UserService{
             throw new LoginException("账号已失效");
         }
         return user1;
+    }
+    public List<User> getUserList(){
+        List<User> uList = new ArrayList<>();
+        uList = userDao.select();
+        return uList;
     }
 }

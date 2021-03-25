@@ -11,4 +11,13 @@ import javax.annotation.Resource;
 public class ActitityServiceImpl implements ActivityService {
     @Resource
     ActivityDao activityDao;
+    @Override
+    public boolean save(Activity activity) {
+        System.out.println("进入service");
+        int result = activityDao.save(activity);
+        if (result == 1){
+            return true;
+        }
+        return false;
+    }
 }

@@ -4,10 +4,10 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <!--settings:控制mybatis全局行为-->
-    <!--<settings>
-        &lt;!&ndash;输出日志&ndash;&gt;
+    <settings>
+        <!--输出日志-->
         <setting name="logImpl" value="STDOUT_LOGGING"/>
-    </settings>-->
+    </settings>
 
     <typeAliases>
         <!--<typeAlias type="com.bjpowernode.mybatis.domain.Student" alias="student"/>-->

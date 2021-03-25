@@ -46,14 +46,15 @@
             <param-value>utf-8</param-value>
         </init-param>
         <!--这部分需要去掉，强制编码会导致html在显示的时候出现中文乱码-->
-        <init-param>
+        <!--<init-param>
             <param-name>forceRequestEncoding</param-name>
             <param-value>true</param-value>
         </init-param>
         <init-param>
             <param-name>forceResponseEncoding</param-name>
             <param-value>true</param-value>
-        </init-param>
+        </init-param>-->
+
     </filter>
     <filter-mapping>
         <filter-name>characterEncodingFilter</filter-name>

@@ -30,6 +30,7 @@
 
     <!--声明service的注解@Service所在的包名位置-->
     <context:component-scan base-package="com.bjpowernode.crm.settings.service.impl"/>
+    <context:component-scan base-package="com.bjpowernode.crm.workbench.service.impl"/>
 
     <!--事务配置：注解的配置，aspectj的配置-->
 </beans>
