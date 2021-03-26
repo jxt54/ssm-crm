@@ -56,7 +56,6 @@ request.getContextPath() + "/";
 		})
 
 		$("#saveBtn").click(function () {
-			alert("单击成功");
 			$.ajax({
 				url:"workbench/activity/save.do",
 				data:{
@@ -70,17 +69,64 @@ request.getContextPath() + "/";
 				type:"post",
 				success:function (data) {
 					if (data){
-						$("#createActivityModal").modal("hide");
 
+						$("#activityAddForm")[0].reset();
+						$("#createActivityModal").modal("hide");
 
 					}else {
 						alert("数据添加失败");
 					}
 				}
 			})
+			pageList(1,2);
 		})
-		
+		pageList(1,2);
 	});
+	/*
+		对于所有的关系型数据库，做前端的分页相关操作的基础组件
+		就是pageNo和pageSize
+		pageNo:页码
+		pageSize:每页展现的记录数
+
+		pageList方法：就是发出ajax请求到后台，从后台取得最新的市场活动信息列表数据
+					通过响应回来的数据，局部刷新市场活动信息列表
+
+		我们都在哪些情况下，需要调用pageList方法（什么情况下需要刷新一下市场活动列表）
+		（1）点击左侧菜单中的“市场活动”超链接，需要刷新市场活动列表，调用pageList方法
+		（2）添加，修改，删除后，需要刷新市场活动列表，调用pageList方法
+		（3）点击查询按钮的时候，需要刷新市场活动列表，调用pageList方法
+		（4）点击分页组件的时候，调用pageList方法
+
+		以上为pageList方法指定了六个入口，也就是说，在以上6个操作执行完毕之后，我们必须要调用pageList方法，刷新市场活动信息列表
+
+	 */
+	function pageList(pageNo,pageSize) {
+		$.ajax({
+			url:"workbench/activity/pageList.do",
+			type:"get",
+			data:{
+				"pageNo":pageNo,
+				"pageSize":pageSize,
+				"name":$.trim($("#search-name").val()),
+				"owner":$.trim($("#search-owner").val()),
+				"startDate":$.trim($("#search-startTime").val()),
+				"endDate":$.trim($("#search-endTime").val()),
+			},
+			success:function (data) {
+				var html = "";
+				$.each(data.dataList,function (i,n) {
+						html += '<tr class="activity" + n.id +>';
+						html += '<td><input type="checkbox" /></td>';
+						html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/activity/detail.jsp\';">'+n.name+'</a></td>';
+						html += '<td>'+n.owner+'</td>';
+						html += '<td>'+n.startDate+'</td>';
+						html += '<td>'+n.endDate+'</td>';
+						html += '</tr>'
+				})
+				$("#activityBody").html(html);
+			}
+		})
+	}
 	
 </script>
 </head>
@@ -98,7 +144,7 @@ request.getContextPath() + "/";
 				</div>
 				<div class="modal-body">
 				
-					<form class="form-horizontal" role="form">
+					<form class="form-horizontal" role="form" id="activityAddForm">
 					
 						<div class="form-group">
 							<label for="create-marketActivityOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
@@ -233,14 +279,14 @@ request.getContextPath() + "/";
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">名称</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="search-name">
 				    </div>
 				  </div>
 				  
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">所有者</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="search-owner">
 				    </div>
 				  </div>
 
@@ -248,17 +294,17 @@ request.getContextPath() + "/";
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">开始日期</div>
-					  <input class="form-control" type="text" id="startTime" />
+					  <input class="form-control" type="text" id="search-startTime" />
 				    </div>
 				  </div>
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">结束日期</div>
-					  <input class="form-control" type="text" id="endTime">
+					  <input class="form-control" type="text" id="search-endTime">
 				    </div>
 				  </div>
 				  
-				  <button type="submit" class="btn btn-default">查询</button>
+				  <button type="botton" class="btn btn-default" id="searchBtn">查询</button>
 				  
 				</form>
 			</div>
@@ -297,8 +343,8 @@ request.getContextPath() + "/";
 							<td>结束日期</td>
 						</tr>
 					</thead>
-					<tbody>
-						<tr class="active">
+					<tbody id="activityBody">
+						<%--<tr class="active">
 							<td><input type="checkbox" /></td>
 							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='workbench/activity/detail.jsp';">发传单</a></td>
                             <td>zhangsan</td>
@@ -311,7 +357,7 @@ request.getContextPath() + "/";
                             <td>zhangsan</td>
                             <td>2020-10-10</td>
                             <td>2020-10-20</td>
-                        </tr>
+                        </tr>--%>
 					</tbody>
 				</table>
 			</div>
