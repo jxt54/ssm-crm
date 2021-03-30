@@ -9,6 +9,7 @@ import com.bjpowernode.crm.workbench.domain.Activity;
 import com.bjpowernode.crm.workbench.service.ActivityService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
@@ -31,6 +32,7 @@ public class ActitityController {
         List<User> list = new ArrayList<>();
 
         list = userService.getUserList();
+
         return list;
     }
     @ResponseBody
@@ -45,11 +47,26 @@ public class ActitityController {
     @ResponseBody
     @RequestMapping("/pageList.do")
     public PaginationVo<Activity> pageList(Activity activity, Integer pageNo, Integer pageSize){
-        System.out.println(pageNo+"   "+pageSize);
         Map<String,Object> map = new HashMap<>();
         map.put("activity",activity);
         map.put("pageNo",pageNo);
         map.put("pageSize",pageSize);
+
+        /*List<Activity> list = new ArrayList<>();
+        list = activityService.pageList(map).getDataList();
+        for (Activity activity1: list){
+            System.out.println("======================="+activity1.getName());
+            System.out.println("======================="+activity1.getOwner());
+            System.out.println("======================="+activity1.getStartDate());
+            System.out.println("======================="+activity1.getEndDate());
+        }
+        System.out.println("======================="+activityService.pageList(map).getTotal());
+*/
         return activityService.pageList(map);
+    }
+    @ResponseBody
+    @RequestMapping("/delete.do")
+    public boolean delete (@RequestParam(value = "id")String[] ids){   //// 前端传过来的参数是id,后端变量名称变成ids使用
+        return activityService.delete(ids);
     }
 }
