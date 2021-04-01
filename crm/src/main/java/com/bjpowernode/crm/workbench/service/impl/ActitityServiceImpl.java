@@ -6,6 +6,7 @@ import com.bjpowernode.crm.vo.PaginationVo;
 import com.bjpowernode.crm.workbench.dao.ActivityDao;
 import com.bjpowernode.crm.workbench.dao.ActivityRemarkDao;
 import com.bjpowernode.crm.workbench.domain.Activity;
+import com.bjpowernode.crm.workbench.domain.ActivityRemark;
 import com.bjpowernode.crm.workbench.service.ActivityService;
 import org.springframework.stereotype.Service;
 
@@ -100,5 +101,16 @@ public class ActitityServiceImpl implements ActivityService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public Activity detail(String id) {
+        Activity activity = activityDao.detail(id);
+        return activity;
+    }
+
+    @Override
+    public List<ActivityRemark> getRemarkListByAid(String activityId) {
+        return activityRemarkDao.getRemarkListByAid(activityId);
     }
 }

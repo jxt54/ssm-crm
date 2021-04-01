@@ -6,11 +6,13 @@ import com.bjpowernode.crm.utils.DateTimeUtil;
 import com.bjpowernode.crm.utils.UUIDUtil;
 import com.bjpowernode.crm.vo.PaginationVo;
 import com.bjpowernode.crm.workbench.domain.Activity;
+import com.bjpowernode.crm.workbench.domain.ActivityRemark;
 import com.bjpowernode.crm.workbench.service.ActivityService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -52,21 +54,11 @@ public class ActitityController {
         map.put("pageNo",pageNo);
         map.put("pageSize",pageSize);
 
-        /*List<Activity> list = new ArrayList<>();
-        list = activityService.pageList(map).getDataList();
-        for (Activity activity1: list){
-            System.out.println("======================="+activity1.getName());
-            System.out.println("======================="+activity1.getOwner());
-            System.out.println("======================="+activity1.getStartDate());
-            System.out.println("======================="+activity1.getEndDate());
-        }
-        System.out.println("======================="+activityService.pageList(map).getTotal());
-*/
         return activityService.pageList(map);
     }
     @ResponseBody
     @RequestMapping("/delete.do")
-    public boolean delete (@RequestParam(value = "id")String[] ids){   //// 前端传过来的参数是id,后端变量名称变成ids使用
+    public boolean delete (@RequestParam(value = "id")String[] ids){   // 前端传过来的参数是id,后端变量名称变成ids使用
         return activityService.delete(ids);
     }
     @ResponseBody
@@ -78,5 +70,21 @@ public class ActitityController {
     @RequestMapping("/update.do")
     public boolean update(Activity activity){
         return activityService.update(activity);
+    }
+
+
+    @RequestMapping("/detail.do")
+    public ModelAndView detail(String id){
+        Activity activity = activityService.detail(id);
+        ModelAndView mv = new ModelAndView();
+        mv.addObject("a",activity);
+        mv.setViewName("activity/detail");
+        return mv;
+    }
+
+    @ResponseBody
+    @RequestMapping("/activityRemarkListByAid.do")
+    public List<ActivityRemark> activityRemarkListByAid(String activityId){
+        return activityService.getRemarkListByAid(activityId);
     }
 }

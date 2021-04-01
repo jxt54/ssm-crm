@@ -104,7 +104,9 @@ request.getContextPath() + "/";
 							这两个参数不需要我们进行任何的操作，直接使用即可
 
 						*/
-						pageList($("#activityPage").bs_pagination('getOption','currentPage')
+
+						//做完添加操作后 ，应该回到第一页，维持每页展现的记录数
+						pageList(1
 								,$("#activityPage").bs_pagination('getOption','rowsPerPage'));
 
 					}else {
@@ -165,7 +167,8 @@ request.getContextPath() + "/";
 					type:"post",
 					data:param,
 					success:function () {
-						pageList(1,2);
+                        pageList(1,
+                                $("#activityPage").bs_pagination('getOption','rowsPerPage'));
 					}
 				})
 			}
@@ -232,7 +235,10 @@ request.getContextPath() + "/";
 						alert("修改成功");
 						//关闭模态窗口
 						$("#editActivityModal").modal("hide");
-						pageList(1,2);
+
+						//修改操作后，应该维持在当前页，维持每页展现的记录数
+						pageList($("#activityPage").bs_pagination('getOption','currentPage'),
+                                $("#activityPage").bs_pagination('getOption','rowsPerPage'));
 					}else {
 						alert("修改失败");
 					}
@@ -288,7 +294,7 @@ request.getContextPath() + "/";
 				$.each(data.dataList,function (i,n) {
 						html += '<tr class="active">';
 						html += '<td><input type="checkbox" name="xz" value="'+n.id+'"/></td>';
-						html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/activity/detail.jsp\';">'+n.name+'</a></td>';
+						html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/activity/detail.do?id='+n.id+'\';">'+n.name+'</a></td>';
 						html += '<td>'+n.owner+'</td>';
 						html += '<td>'+n.startDate+'</td>';
 						html += '<td>'+n.endDate+'</td>';

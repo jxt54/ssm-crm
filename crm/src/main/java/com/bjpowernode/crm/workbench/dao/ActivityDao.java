@@ -12,4 +12,5 @@ public interface ActivityDao {
     int delete(String[] ids);
     Activity getUserListAndActivity(String id);
     int update(Activity activity);
+    Activity detail(String id);
 }

@@ -75,4 +75,21 @@
         editBy=#{editBy}
         where id=#{id}
     </update>
+    <select id="detail" resultType="Activity">
+        select u.name owner,
+                a.id id,
+                a.name name,
+                a.startDate startDate,
+                a.endDate endDate,
+                a.cost cost,
+                a.description description,
+                a.createTime createTime,
+                a.createBy createBy,
+                a.editTime editTime,
+                a.editBy editBy
+        from tbl_activity a
+        join tbl_user u
+        on a.owner=u.id
+        where a.id=#{id}
+    </select>
 </mapper>
