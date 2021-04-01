@@ -1,5 +1,7 @@
 package com.bjpowernode.crm.workbench.service.impl;
 
+import com.bjpowernode.crm.settings.dao.UserDao;
+import com.bjpowernode.crm.settings.domain.User;
 import com.bjpowernode.crm.vo.PaginationVo;
 import com.bjpowernode.crm.workbench.dao.ActivityDao;
 import com.bjpowernode.crm.workbench.dao.ActivityRemarkDao;
@@ -14,6 +16,8 @@ import java.util.Map;
 
 @Service
 public class ActitityServiceImpl implements ActivityService {
+    @Resource
+    UserDao userDao;
     @Resource
     ActivityDao activityDao;
     @Resource
@@ -73,5 +77,28 @@ public class ActitityServiceImpl implements ActivityService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public Map<String,Object> getUserListAndActivity(String id) {
+        Map<String,Object> map = new HashMap<>();
+        Activity activity = activityDao.getUserListAndActivity(id);
+        System.out.println("==============="+activity.getOwner());
+
+        List<User> list = userDao.select();
+
+        map.put("uList",list);
+        map.put("a",activity);
+
+        return map;
+    }
+
+    @Override
+    public boolean update(Activity activity) {
+        int result = activityDao.update(activity);
+        if (result == 1){
+            return true;
+        }
+        return false;
     }
 }

@@ -69,4 +69,14 @@ public class ActitityController {
     public boolean delete (@RequestParam(value = "id")String[] ids){   //// 前端传过来的参数是id,后端变量名称变成ids使用
         return activityService.delete(ids);
     }
+    @ResponseBody
+    @RequestMapping("/getUserListAndActivity.do")
+    public Map<String,Object> getUserListAndActivity(String id){
+        return activityService.getUserListAndActivity(id);
+    }
+    @ResponseBody
+    @RequestMapping("/update.do")
+    public boolean update(Activity activity){
+        return activityService.update(activity);
+    }
 }
