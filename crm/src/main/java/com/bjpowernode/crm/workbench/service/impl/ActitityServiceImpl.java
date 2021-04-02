@@ -113,4 +113,39 @@ public class ActitityServiceImpl implements ActivityService {
     public List<ActivityRemark> getRemarkListByAid(String activityId) {
         return activityRemarkDao.getRemarkListByAid(activityId);
     }
+
+    @Override
+    public boolean deleteRemark(String id) {
+        int result = activityRemarkDao.deleteRemark(id);
+        if (result == 1){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Map<String, Object> saveRemark(ActivityRemark activityRemark) {
+        boolean flag = false;
+        Map<String,Object> map = new HashMap<>();
+        int result = activityRemarkDao.saveRemark(activityRemark);
+        if (result == 1){
+            flag = true;
+        }
+        map.put("success",flag);
+        map.put("ar",activityRemark);
+        return map;
+    }
+
+    @Override
+    public Map<String,Object> updateRemark(ActivityRemark activityRemark) {
+        Map<String,Object> map = new HashMap<>();
+        boolean flag = false;
+        int result = activityRemarkDao.updateRemark(activityRemark);
+        if (result == 1){
+            flag = true;
+        }
+        map.put("success",flag);
+        map.put("ar",activityRemark);
+        return map;
+    }
 }

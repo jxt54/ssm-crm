@@ -53,8 +53,55 @@ request.getContextPath() + "/";
 		$(".myHref").mouseout(function(){
 			$(this).children("span").css("color","#E6E6E6");
 		});
-
+        //页面加载完毕后，展现该市场活动关联的备注信息列表
 		showRemarkList();
+
+		$("#remarkBody").on("mouseover",".remarkDiv",function(){
+		    $(this).children("div").children("div").show();
+        })
+        $("#remarkBody").on("mouseout",".remarkDiv",function(){
+            $(this).children("div").children("div").hide();
+        })
+
+        $("#saveRemarkBtn").click(function () {
+            $.ajax({
+                url:"workbench/activity/saveRemark.do",
+                type:"post",
+                data:{
+                    "noteContent":$.trim($("#remark").val()),
+                    "activityId":"${a.id}",
+                },
+                success:function (data) {
+                    /*
+                        {"success":true/false,"ar":{备注}}
+                     */
+                    if (data.success){
+                        //清空文本域中的信息
+                        $("#remark").val("");
+                        //var text = $.trim($("#remark").val());
+                        var html = "";
+
+                        html += '<div id="'+data.ar.id+'" class="remarkDiv" style="height: 60px;">';
+                        html += '<img title="zhangsan" src="image/user-thumbnail.png" style="width: 30px; height:30px;">';
+                        html += '<div style="position: relative; top: -40px; left: 40px;" >';
+                        html += '<h5>'+data.ar.noteContent+'</h5>';
+                        html += '<font color="gray">市场活动</font> <font color="gray">-</font> <b>${a.name}</b> <small style="color: gray;"> '+(data.ar.createTime)+' 由'+(data.ar.createBy)+'</small>';
+                        html += '<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">';
+                        html += '<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #FF0000;"></span></a>';
+                        html += '&nbsp;&nbsp;&nbsp;&nbsp;';
+                        html += '<a class="myHref" href="javascript:void(0);" onclick="deleteRemark(\''+data.ar.id+'\')"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #FF0000;"></span></a>';
+                        html += '</div>';
+                        html += '</div>';
+                        html += '</div>';
+
+                        $("#remarkDiv").before(html);
+                    }else {
+                        alert("添加失败");
+                    }
+                }
+            })
+        })
+
 	});
 	function showRemarkList() {
 		$.ajax({
@@ -66,15 +113,22 @@ request.getContextPath() + "/";
 			success:function (data) {
 				var html = "";
 				$.each(data,function (i,n) {
-					html += '<div class="remarkDiv" style="height: 60px;">';
+				    /*
+                         javascript:void(0);
+                            将超链接禁用，只能以触发事件的形式来操作
+
+                        对于动态生成的元素所触发的方法，它的参数必须套用在字符串中
+				     */
+
+					html += '<div id="'+n.id+'" class="remarkDiv" style="height: 60px;">';
 					html += '<img title="zhangsan" src="image/user-thumbnail.png" style="width: 30px; height:30px;">';
 					html += '<div style="position: relative; top: -40px; left: 40px;" >';
-					html += '<h5>'+n.noteContent+'</h5>';
-					html += '<font color="gray">市场活动</font> <font color="gray">-</font> <b>${a.name}</b> <small style="color: gray;"> '+(n.editFlag==0?n.createTime:n.editTime)+' 由'+(n.editFlag==0?n.createBy:n.editBy)+'</small>';
+					html += '<h5 id="e'+n.id+'">'+n.noteContent+'</h5>';
+					html += '<font color="gray">市场活动</font> <font color="gray">-</font> <b>${a.name}</b> <small style="color: gray;" id="s'+n.id+'"> '+(n.editFlag==0?n.createTime:n.editTime)+' 由'+(n.editFlag==0?n.createBy:n.editBy)+'</small>';
 					html += '<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">';
-					html += '<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #E6E6E6;"></span></a>';
+					html += '<a class="myHref" href="javascript:void(0);" onclick="editRemark(\''+n.id+'\')"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #FF0000;"></span></a>';
 					html += '&nbsp;&nbsp;&nbsp;&nbsp;';
-					html += '<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #E6E6E6;"></span></a>';
+					html += '<a class="myHref" href="javascript:void(0);" onclick="deleteRemark(\''+n.id+'\')"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #FF0000;"></span></a>';
 					html += '</div>';
 					html += '</div>';
 					html += '</div>';
@@ -84,6 +138,54 @@ request.getContextPath() + "/";
 			}
 		})
 	}
+	function editRemark(id) {
+        $("#editRemarkModal").modal("show");
+        //将模态窗口中，隐藏域中的id进行赋值
+        $("#remarkId").val(id);
+        //从备注div中获取备注文本，赋予到修改操作模态窗口的文本域中
+        $("#noteContent").val($("#e"+id).html());
+
+        $("#updateRemarkBtn").click(function () {
+
+            $.ajax({
+                url:"workbench/activity/updateRemark.do",
+                type:"post",
+                data:{
+                    "id":id,
+                    "noteContent":$.trim($("#noteContent").val())
+                },
+                success:function (data) {
+                    /*
+                        {"success":true/false,"ar":{备注}}
+                     */
+                    if (data.success){
+                        $("#editRemarkModal").modal("hide");
+                        $("#e"+id).html(data.ar.noteContent);
+                        $("#s"+id).html(data.ar.editTime+" 由"+data.ar.editBy);
+                    }else {
+                        alert("修改失败");
+                    }
+                }
+            })
+        })
+    }
+	function deleteRemark(id) {
+        $.ajax({
+            url:"workbench/activity/deleteRemark.do",
+            type:"get",
+            data:{
+                "id":id,
+            },
+            success:function (data) {
+                if (data){
+                    //showRemarkList(); 错误，会在之前的记录后直接拼接
+                    $("#"+id).remove();
+                }else {
+                    alert("删除失败");
+                }
+            }
+        })
+    }
 
 </script>
 
@@ -247,7 +349,7 @@ request.getContextPath() + "/";
 	</div>
 	
 	<!-- 备注 -->
-	<div style="position: relative; top: 30px; left: 40px;">
+	<div id="remarkBody" style="position: relative; top: 30px; left: 40px;">
 		<div class="page-header">
 			<h4>备注</h4>
 		</div>
@@ -274,7 +376,7 @@ request.getContextPath() + "/";
 				<textarea id="remark" class="form-control" style="width: 850px; resize : none;" rows="2"  placeholder="添加备注..."></textarea>
 				<p id="cancelAndSaveBtn" style="position: relative;left: 737px; top: 10px; display: none;">
 					<button id="cancelBtn" type="button" class="btn btn-default">取消</button>
-					<button type="button" class="btn btn-primary">保存</button>
+					<button type="button" class="btn btn-primary" id="saveRemarkBtn">保存</button>
 				</p>
 			</form>
 		</div>

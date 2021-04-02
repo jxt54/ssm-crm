@@ -87,4 +87,26 @@ public class ActitityController {
     public List<ActivityRemark> activityRemarkListByAid(String activityId){
         return activityService.getRemarkListByAid(activityId);
     }
+    @ResponseBody
+    @RequestMapping("/deleteRemark.do")
+    public boolean deleteRemark(String id){
+        return activityService.deleteRemark(id);
+    }
+    @ResponseBody
+    @RequestMapping("/saveRemark.do")
+    public Map<String,Object> saveRemark(HttpSession session,ActivityRemark activityRemark){
+        activityRemark.setId(UUIDUtil.getUUID());
+        activityRemark.setCreateTime(DateTimeUtil.getSysTime());
+        activityRemark.setCreateBy(((User)(session.getAttribute("user"))).getName());
+        activityRemark.setEditFlag("0");
+        return activityService.saveRemark(activityRemark);
+    }
+    @ResponseBody
+    @RequestMapping("/updateRemark.do")
+    public Map<String,Object> updateRemark(HttpSession session,ActivityRemark activityRemark){
+        activityRemark.setEditTime(DateTimeUtil.getSysTime());
+        activityRemark.setEditBy(((User)(session.getAttribute("user"))).getName());
+        activityRemark.setEditFlag("1");
+        return activityService.updateRemark(activityRemark);
+    }
 }
