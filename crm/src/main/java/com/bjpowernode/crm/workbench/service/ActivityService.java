@@ -18,4 +18,6 @@ public interface ActivityService {
     boolean deleteRemark(String id);
     Map<String,Object> saveRemark(ActivityRemark activityRemark);
     Map<String,Object> updateRemark(ActivityRemark activityRemark);
+    List<Activity> getActivityListByClueId(String clueId);
+    List<Activity> getActivityByNameAndNotByClueId(Map<String,String> map);
 }

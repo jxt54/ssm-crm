@@ -13,4 +13,6 @@ public interface ActivityDao {
     Activity getUserListAndActivity(String id);
     int update(Activity activity);
     Activity detail(String id);
+    List<Activity> getActivityListByClueId(String clueId);
+    List<Activity> getActivityByNameAndNotByClueId(Map<String,String> map);
 }

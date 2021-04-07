@@ -92,4 +92,29 @@
         on a.owner=u.id
         where a.id=#{id}
     </select>
+    <select id="getActivityListByClueId" resultType="Activity">
+        select a.name,a.startDate,a.endDate,u.name owner,r.id id
+        from tbl_clue_activity_relation r
+        join tbl_activity a
+        on a.id=r.activityId
+        join tbl_user u
+        on u.id=a.owner
+        where r.clueId=#{clueID}
+    </select>
+    <select id="getActivityByNameAndNotByClueId" resultType="Activity">
+        select
+        a.id,
+        u.name owner,
+        a.name,
+        a.startDate,
+        a.endDate
+        from tbl_activity a
+        join tbl_user u
+        on a.owner=u.id
+        where a.name like '%' #{aname} '%'
+        and a.id not in (
+        select activityId from tbl_clue_activity_relation car
+        where car.clueId=#{clueId}
+        )
+    </select>
 </mapper>

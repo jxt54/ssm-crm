@@ -78,8 +78,72 @@ request.getContextPath() + "/";
 				}
 			})
 		})
+        pageList(1,2);
 		
 	});
+
+
+    function pageList(pageNo,pageSize) {
+
+        /*$("#qx").prop("checked",false);*/
+        //查询前，将隐藏域中保存的信息取出来，重新赋予到搜索框中
+
+        /*$("#search-name").val($.trim($("#hidden-name").val()));
+        $("#search-owner").val($.trim($("#hidden-owner").val()));
+        $("#search-startDate").val($.trim($("#hidden-startDate").val()));
+        $("#search-endDate").val($.trim($("#hidden-endDate").val()));*/
+
+        $.ajax({
+            url:"workbench/clue/pageList.do",
+            type:"get",
+			data:{
+				"pageNo":pageNo,
+				"pageSize":pageSize,
+			},
+            success:function (data) {
+                var html = "";
+                $.each(data.dataList,function (i,n) {
+                    html += '<tr class="clue">';
+                    html += '<td><input type="checkbox" value="'+n.id+'"/></td>';
+                    html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/clue/detail.do?id='+n.id+'\';">'+n.fullname+'</a></td>';
+                    html += '<td>'+n.company+'</td>';
+                    html += '<td>'+n.phone+'</td>';
+                    html += '<td>'+n.mphone+'</td>';
+                    html += '<td>'+n.source+'</td>';
+                    html += '<td>'+n.owner+'</td>';
+                    html += '<td>'+n.state+'</td>';
+                    html += '</tr>';
+
+                })
+                $("#clueBody").html(html);
+
+                var totalPages = data.total%pageSize==0 ? data.total/pageSize : parseInt(data.total/pageSize) + 1;
+                //数据处理完毕后，结合分页插件，对前端展现分页信息
+                $("#activityPage").bs_pagination({
+                    currentPage: pageNo, // 页码
+                    rowsPerPage: pageSize, // 每页显示的记录条数
+                    maxRowsPerPage: 20, // 每页最多显示的记录条数
+                    totalPages: totalPages, // 总页数
+                    totalRows: data.total, // 总记录条数
+
+                    visiblePageLinks: 3, // 显示几个卡片
+
+                    showGoToPage: true,
+                    showRowsPerPage: true,
+                    showRowsInfo: true,
+                    showRowsDefaultInfo: true,
+
+                    // 该回调函数是在点击分页组件的时候触发的
+                    onChangePage : function(event, data){
+                        pageList(data.currentPage , data.rowsPerPage);
+                    }
+                });
+            },
+            error:function (data) {
+                console.log(data);
+            }
+        })
+    }
 	
 </script>
 </head>
@@ -503,27 +567,9 @@ request.getContextPath() + "/";
 							<td>线索状态</td>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td><input type="checkbox" /></td>
-							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='workbench/clue/detail.jsp';">李四先生</a></td>
-							<td>动力节点</td>
-							<td>010-84846003</td>
-							<td>12345678901</td>
-							<td>广告</td>
-							<td>zhangsan</td>
-							<td>已联系</td>
-						</tr>
-                        <tr class="active">
-                            <td><input type="checkbox" /></td>
-                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='workbench/clue/detail.jsp';">李四先生</a></td>
-                            <td>动力节点</td>
-                            <td>010-84846003</td>
-                            <td>12345678901</td>
-                            <td>广告</td>
-                            <td>zhangsan</td>
-                            <td>已联系</td>
-                        </tr>
+					<tbody id="clueBody">
+
+
 					</tbody>
 				</table>
 			</div>

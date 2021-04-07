@@ -5,6 +5,7 @@ import com.bjpowernode.crm.settings.domain.User;
 import com.bjpowernode.crm.vo.PaginationVo;
 import com.bjpowernode.crm.workbench.dao.ActivityDao;
 import com.bjpowernode.crm.workbench.dao.ActivityRemarkDao;
+import com.bjpowernode.crm.workbench.dao.ClueActivityRelationDao;
 import com.bjpowernode.crm.workbench.domain.Activity;
 import com.bjpowernode.crm.workbench.domain.ActivityRemark;
 import com.bjpowernode.crm.workbench.service.ActivityService;
@@ -147,5 +148,15 @@ public class ActitityServiceImpl implements ActivityService {
         map.put("success",flag);
         map.put("ar",activityRemark);
         return map;
+    }
+
+    @Override
+    public List<Activity> getActivityListByClueId(String clueId) {
+        return activityDao.getActivityListByClueId(clueId);
+    }
+
+    @Override
+    public List<Activity> getActivityByNameAndNotByClueId(Map<String, String> map) {
+        return activityDao.getActivityByNameAndNotByClueId(map);
     }
 }
