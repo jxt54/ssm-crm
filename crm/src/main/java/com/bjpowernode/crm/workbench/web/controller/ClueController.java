@@ -9,9 +9,9 @@ import com.bjpowernode.crm.workbench.domain.Activity;
 import com.bjpowernode.crm.workbench.domain.Clue;
 import com.bjpowernode.crm.workbench.service.ActivityService;
 import com.bjpowernode.crm.workbench.service.ClueService;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -74,5 +74,15 @@ public class ClueController {
         map.put("aname",aname);
         map.put("clueId",clueId);
         return activityService.getActivityByNameAndNotByClueId(map);
+    }
+    @ResponseBody
+    @RequestMapping("/bund.do")
+    public boolean bund(@RequestParam(value = "cid") String cid,@RequestParam(value = "aid") String[] aid){
+        return clueService.bund(cid,aid);
+    }
+    @ResponseBody
+    @RequestMapping("getActivityListByName.do")
+    public List<Activity> getActivityListByName(String aname){
+        return activityService.getActivityListByName(aname);
     }
 }

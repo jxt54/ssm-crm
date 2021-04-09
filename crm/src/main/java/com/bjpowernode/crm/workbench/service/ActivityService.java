@@ -20,4 +20,5 @@ public interface ActivityService {
     Map<String,Object> updateRemark(ActivityRemark activityRemark);
     List<Activity> getActivityListByClueId(String clueId);
     List<Activity> getActivityByNameAndNotByClueId(Map<String,String> map);
+    List<Activity> getActivityListByName(String aname);
 }

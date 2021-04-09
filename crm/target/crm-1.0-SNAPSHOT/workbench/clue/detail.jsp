@@ -41,7 +41,7 @@ request.getContextPath() + "/";
 		$(".remarkDiv").mouseover(function(){
 			$(this).children("div").children("div").show();
 		});
-		
+
 		$(".remarkDiv").mouseout(function(){
 			$(this).children("div").children("div").hide();
 		});
@@ -83,6 +83,69 @@ request.getContextPath() + "/";
 				//展现完列表后，记得将模态窗口默认的回车行为禁用掉
                 return false;
 			}
+		})
+
+        //为全选的复选框绑定事件，触发全选操作
+        $("#qx").click(function () {
+            $("input[name=xz]").prop("checked",this.checked);
+        })
+		/*
+            动态生成的元素，我们要以on方法的形式来绑定事件
+            语法：
+                $("需要绑定事件的有效的外层元素").on("绑定事件的方式"，需要绑定的元素的jquery对象，回调函数)
+         */
+		$("#activitySearchBody").on("click",$("input[name=xz]"),function () {
+			$("#qx").prop("checked",$("input[name=xz]").length==$("input[name=xz]:checked").length);
+		})
+
+
+        //为关联按钮绑定事件，执行关联表的添加操作
+        $("#bundBtn").click(function () {
+            var $xz = $("input[name=xz]:checked");
+            if ($xz.length == 0){
+                alert("请选择需要关联的市场活动");
+            }else{
+                var param = "cid=${c.id}&";
+                for (var i=0 ; i < $xz.length ; i++){
+                    param += "aid="+$($xz[i]).val();
+                    if (i < $xz.length - 1){
+                        param += "&";
+                    }
+                }
+                //alert(param);
+				$.ajax({
+					url:"workbench/clue/bund.do",
+					type:"post",
+					data:param,
+					success:function (data) {
+						if (data){
+
+							//刷新市场关联活动的列表
+							showActivityList();
+							//清除搜索框中的信息
+							$("#aname").val("");
+							$("#activitySearchBody").html("");
+							$("#qx").prop("checked",false);
+
+							$("#bundModal").modal("hide");
+						}else {
+							alert("关联失败");
+						}
+					}
+				})
+            }
+        })
+		$("#setBtn").click(function () {
+			$.ajax({
+				url:"workbench/clue/set.do",
+				type:"post",
+				data:{
+					"id":"${c.id}"
+				},
+				success:function () {
+
+				}
+			})
 		})
 	});
 
@@ -154,7 +217,7 @@ request.getContextPath() + "/";
 					<table id="activityTable" class="table table-hover" style="width: 900px; position: relative;top: 10px;">
 						<thead>
 							<tr style="color: #B3B3B3;">
-								<td><input type="checkbox"/></td>
+								<td><input type="checkbox" id="qx"/></td>
 								<td>名称</td>
 								<td>开始日期</td>
 								<td>结束日期</td>
@@ -182,7 +245,7 @@ request.getContextPath() + "/";
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">关联</button>
+					<button type="button" class="btn btn-primary" id="bundBtn">关联</button>
 				</div>
 			</div>
 		</div>
@@ -355,7 +418,7 @@ request.getContextPath() + "/";
 			<h3>${c.fullname}${c.appellation}<small>${c.company}</small></h3>
 		</div>
 		<div style="position: relative; height: 50px; width: 500px;  top: -72px; left: 700px;">
-			<button type="button" class="btn btn-default" onclick="window.location.href='workbench/clue/convert.jsp';"><span class="glyphicon glyphicon-retweet"></span> 转换</button>
+			<button type="button" class="btn btn-default" <%--id="setBtn"--%> onclick="window.location.href='workbench/clue/convert.jsp?id=${c.id}&fullname=${c.fullname}&appellation=${c.appellation}&company=${c.company}&woner=${c.owner}';"><span class="glyphicon glyphicon-retweet"></span> 转换</button>
 			<button type="button" class="btn btn-default" data-toggle="modal" data-target="#editClueModal"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
 			<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 		</div>

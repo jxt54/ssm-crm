@@ -117,4 +117,16 @@
         where car.clueId=#{clueId}
         )
     </select>
+    <select id="getActivityListByName" resultType="Activity">
+        select
+        a.id,
+        u.name owner,
+        a.name,
+        a.startDate,
+        a.endDate
+        from tbl_activity a
+        join tbl_user u
+        on a.owner=u.id
+        where a.name like '%' #{aname} '%'
+    </select>
 </mapper>
