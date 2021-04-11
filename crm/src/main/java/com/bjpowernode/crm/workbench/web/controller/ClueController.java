@@ -7,6 +7,7 @@ import com.bjpowernode.crm.utils.UUIDUtil;
 import com.bjpowernode.crm.vo.PaginationVo;
 import com.bjpowernode.crm.workbench.domain.Activity;
 import com.bjpowernode.crm.workbench.domain.Clue;
+import com.bjpowernode.crm.workbench.domain.Tran;
 import com.bjpowernode.crm.workbench.service.ActivityService;
 import com.bjpowernode.crm.workbench.service.ClueService;
 import org.springframework.stereotype.Controller;
@@ -81,8 +82,22 @@ public class ClueController {
         return clueService.bund(cid,aid);
     }
     @ResponseBody
-    @RequestMapping("getActivityListByName.do")
+    @RequestMapping("/getActivityListByName.do")
     public List<Activity> getActivityListByName(String aname){
         return activityService.getActivityListByName(aname);
+    }
+    @RequestMapping("/convert.do")
+    public ModelAndView convert(HttpSession httpSession,String clueId, Tran tran, String flag){
+        String createBy = ((User)(httpSession.getAttribute("user"))).getName();
+        ModelAndView mv = new ModelAndView();
+        if ("a".equals(flag)){
+            tran.setId(UUIDUtil.getUUID());
+            tran.setCreateBy(createBy);
+            tran.setCreateTime(DateTimeUtil.getSysTime());
+
+        }
+        clueService.convert(clueId,tran,createBy);
+        mv.setViewName("clue/index");
+        return  mv;
     }
 }

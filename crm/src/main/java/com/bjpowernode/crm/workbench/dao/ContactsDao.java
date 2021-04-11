@@ -1,5 +1,7 @@
 package com.bjpowernode.crm.workbench.dao;
 
-public interface ContactsDao {
+import com.bjpowernode.crm.workbench.domain.Contacts;
 
+public interface ContactsDao {
+    int save(Contacts contacts);
 }

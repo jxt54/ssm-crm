@@ -90,6 +90,12 @@
         delete from tbl_clue_activity_relation
         where id=#{id}
     </delete>
+    <select id="getById" resultType="Clue">
+        select * from tbl_clue where id=#{id};
+    </select>
+    <delete id="delete">
+        delete from tbl_clue where id=#{id}
+    </delete>
 </mapper>
 
 

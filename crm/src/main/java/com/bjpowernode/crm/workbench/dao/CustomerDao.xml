@@ -4,8 +4,36 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.bjpowernode.crm.workbench.dao.CustomerDao">
-	
-  	
+	<select id="getCustomerByName" resultType="Customer">
+        select * from tbl_customer where name=#{name}
+    </select>
+  	<insert id="save">
+        insert into tbl_customer (
+        id,
+        address,
+        contactSummary,
+        createBy,
+        createTime,
+        description,
+        name,
+        nextContactTime,
+        owner,
+        phone,
+        website
+        ) values (
+        #{id},
+        #{address},
+        #{contactSummary},
+        #{createBy},
+        #{createTime},
+        #{description},
+        #{name},
+        #{nextContactTime},
+        #{owner},
+        #{phone},
+        #{website}
+        );
+    </insert>
 </mapper>
 
 

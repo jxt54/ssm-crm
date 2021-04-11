@@ -1,5 +1,7 @@
 package com.bjpowernode.crm.workbench.dao;
 
-public interface CustomerRemarkDao {
+import com.bjpowernode.crm.workbench.domain.CustomerRemark;
 
+public interface CustomerRemarkDao {
+    int save(CustomerRemark customerRemark);
 }

@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface ClueActivityRelationDao {
     int bund(List<ClueActivityRelation> list);
+    List<ClueActivityRelation> getListByClueId(String id);
+    int delete(String id);
 }

@@ -87,9 +87,36 @@ request.getContextPath() + "/";
 			//将以上两项信息填写到 交易表单的市场活动源中
 			$("#activityName").val(name);
 			$("#activityId").val(id);
-			alert(id);
-			alert(name);
 			$("#searchActivityModal").modal("hide");
+		})
+
+		//为转换按钮绑定事件，执行线索的转换操作
+		$("#convertBtn").click(function () {
+			/*
+					提交请求到后台，执行线索转换的操作，应该发出传统请求
+					请求结束后，最终响应回线索列表页
+
+					根据“为客户创建交易”的复选框有没有打勾，来判断是否需要创建交易
+			 */
+			var id = "${param.id}";
+			if ($("#isCreateTransaction").prop("checked")){
+				//需要创建交易
+				//var money = $("#amountOfMoney").val();
+				//var name = $("#tradeName").val();
+				//var expectedDate = $("#expectedClosingDate").val();
+				//var stage = $("#stage").val();
+				//var source = $("#activityId").val();
+
+				//window.location.href='workbench/clue/convert.do?id='+id+'&money='+money+'&name='+name+'&expectedDate='+expectedDate+'&stage='+stage+'&source='+source+'';
+				//以上传递参数的方式很麻烦，而且表单一旦扩充，挂载的参数有可能超出浏览器地址栏的上限
+				//使用提交交易表单的形式来发出本次的传统请求
+				//提交表单的参数不用手动去挂载（表单中写name属性），提交表单能够提交post请求
+
+				$("#tranForm").submit();
+			}else {
+				//不需要创建交易
+				window.location.href='workbench/clue/convert.do?clueId='+id+'';
+			}
 		})
 	});
 </script>
@@ -175,34 +202,39 @@ request.getContextPath() + "/";
 		为客户创建交易
 	</div>
 	<div id="create-transaction2" style="position: relative; left: 40px; top: 20px; width: 80%; background-color: #F7F7F7; display: none;" >
-	
-		<form>
+
+		<form id="tranForm" action="workbench/clue/convert.do" method="post">
+
+			<input type="hidden" name="flag" value="a"/>
+			<!--clueId-->
+			<input type="hidden" name="clueId" value="${param.id}"/>
+
 		  <div class="form-group" style="width: 400px; position: relative; left: 20px;">
 		    <label for="amountOfMoney">金额</label>
-		    <input type="text" class="form-control" id="amountOfMoney">
+		    <input type="text" class="form-control" id="amountOfMoney" name="money">
 		  </div>
 		  <div class="form-group" style="width: 400px;position: relative; left: 20px;">
 		    <label for="tradeName">交易名称</label>
-		    <input type="text" class="form-control" id="tradeName" value="${c.company}-">
+		    <input type="text" class="form-control" id="tradeName" value="${param.company}-" name="name">
 		  </div>
 		  <div class="form-group" style="width: 400px;position: relative; left: 20px;">
 		    <label for="expectedClosingDate">预计成交日期</label>
-		    <input type="text" class="form-control time" id="expectedClosingDate">
+		    <input type="text" class="form-control time" id="expectedClosingDate" name="expectedDate">
 		  </div>
 		  <div class="form-group" style="width: 400px;position: relative; left: 20px;">
 		    <label for="stage">阶段</label>
-		    <select id="stage"  class="form-control">
+		    <select id="stage"  class="form-control" name="stage">
 				<!-- jstl表达式 -->
 				<option></option>
-				<c:forEach items="${stage}" var="a">
-					<option value="${a.value}">${a.text}</option>
+				<c:forEach items="${stage}" var="s">
+					<option value="${s.value}">${s.text}</option>
 				</c:forEach>
 		    </select>
 		  </div>
 		  <div class="form-group" style="width: 400px;position: relative; left: 20px;">
 		    <label for="activity">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);" id="openSearchModalBtn" style="text-decoration: none;"><span class="glyphicon glyphicon-search"></span></a></label>
 		    <input type="text" class="form-control" id="activityName" placeholder="点击上面搜索" readonly>
-			  <input type="hidden" id="activityId">
+			  <input type="hidden" id="activityId" name="activityId"/>
 		  </div>
 		</form>
 		
@@ -213,7 +245,7 @@ request.getContextPath() + "/";
 		<b>${param.owner}</b>
 	</div>
 	<div id="operation" style="position: relative; left: 40px; height: 35px; top: 100px;">
-		<input class="btn btn-primary" type="button" value="转换">
+		<input class="btn btn-primary" type="button" id="convertBtn" value="转换">
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		<input class="btn btn-default" type="button" value="取消">
 	</div>

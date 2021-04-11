@@ -12,4 +12,6 @@ public interface ClueDao {
     List<Clue> getClueListByCondition(@Param("skipCount") Integer skipCount,@Param("pageSize") Integer pageSize);
     Clue detail(String id);
     int unbund(String id);
+    Clue getById(String id);
+    int delete(String id);
 }
