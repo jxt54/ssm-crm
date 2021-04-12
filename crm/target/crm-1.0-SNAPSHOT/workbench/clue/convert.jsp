@@ -187,6 +187,7 @@ request.getContextPath() + "/";
 			其他所有的隐含对象一概不能省略（如果省略掉了，会变成从域对象中取值）
 
 			el表达式中：九大对象只能用pageContext去取其他八个内置对象。
+			传统请求url中的&name=value使用${param.xxx}来获取
 		--%>
 
 		<h4>转换线索 <small>${param.fullname}${param.appellation}-${param.company}</small></h4>

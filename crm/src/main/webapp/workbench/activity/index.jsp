@@ -50,7 +50,7 @@ request.getContextPath() + "/";
 						html += "<option value='"+n.id+"'>"+n.name+"</option>"
 					})
 					$("#create-Owner").html(html);
-					//取得并默认选中当前登录用户的id
+					//取得并默认选中当前登录用户的id（jquery方式）
 					//在js中使用el表达式，el表达式一定要套用在字符串中
 					$("#create-Owner").val("${user.id}");
 					//所有下拉框处理完毕后，展现模态窗口
